@@ -83,11 +83,11 @@ export default function App() {
       
       <main className="card">
         <div className="header-section">
-          <div className="logo-badge">🔍</div>
-          <p className="eyebrow">Audio Authenticity Scanner</p>
-          <h1>Deepfake Audio Detector</h1>
+          <div className="logo-badge">🎙️</div>
+          <p className="eyebrow">TrueVoice • Deepfake Detection</p>
+          <h1>Is It Real?</h1>
           <p className="subtext">
-            Advanced AI-powered analysis using ResNet-18 trained on 56K+ audio samples
+            Advanced AI-powered deepfake detection using ResNet-18 trained on 56,654 authentic audio samples
           </p>
         </div>
 
