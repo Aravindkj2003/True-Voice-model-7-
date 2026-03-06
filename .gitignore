@@ -1,0 +1,117 @@
+# Deepfake Audio Detection System - Git Ignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+conda-env/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.project
+.pydevproject
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Large files
+*.tar.gz
+*.zip
+*.rar
+
+# Data and Models (large files)
+data/train/
+data/val/
+data/test/
+data/*.json
+models/
+logs/
+results/*.pt
+results/*.pth
+
+# System files
+.DS_Store
+Thumbs.db
+.env
+.env.local
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+.cache/
+
+# Audio files (optional - comment out if you want to version control small datasets)
+*.wav
+*.mp3
+*.flac
+
+# Checkpoints (keep best_model.pt but not others)
+!models/.gitkeep
+checkpoints/
+
+# Training outputs
+runs/
+outputs/
+
+# OS specific
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# Test coverage
+.coverage
+htmlcov/
+
+# Mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Keep these files
+!requirements.txt
+!.gitkeep
+!LICENSE
+!README.md
+!
