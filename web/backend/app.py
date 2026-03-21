@@ -5,6 +5,7 @@ from pathlib import Path
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+import requests
 import torch
 import torchaudio
 
@@ -46,9 +47,35 @@ def _pick_best_model_path() -> Path:
 
     candidates = sorted(DEFAULT_MODEL_DIR.glob("*/best_model.pt"), key=lambda p: p.stat().st_mtime, reverse=True)
     if not candidates:
-        raise FileNotFoundError("No best_model.pt found under models/*/")
+        model_url = os.getenv("MODEL_URL")
+        if model_url:
+            return _download_model_from_url(model_url)
+
+        raise FileNotFoundError(
+            "No best_model.pt found under models/*/. Set MODEL_CHECKPOINT or MODEL_URL."
+        )
 
     return candidates[0]
+
+
+def _download_model_from_url(model_url: str) -> Path:
+    # Use temp directory by default so this also works in ephemeral containers.
+    cache_dir = Path(os.getenv("MODEL_CACHE_DIR", str(Path(tempfile.gettempdir()) / "deepfake_model")))
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    target_path = cache_dir / "best_model.pt"
+
+    if target_path.exists() and target_path.stat().st_size > 0:
+        return target_path
+
+    response = requests.get(model_url, stream=True, timeout=120)
+    response.raise_for_status()
+
+    with target_path.open("wb") as handle:
+        for chunk in response.iter_content(chunk_size=1024 * 1024):
+            if chunk:
+                handle.write(chunk)
+
+    return target_path
 
 
 def _prepare_input_tensor(audio_path: Path, transform: MelSpectrogramTransform) -> torch.Tensor:
