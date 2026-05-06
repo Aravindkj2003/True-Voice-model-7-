@@ -8,6 +8,7 @@ from flask_cors import CORS
 import requests
 import torch
 import torchaudio
+import librosa
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -79,7 +80,15 @@ def _download_model_from_url(model_url: str) -> Path:
 
 
 def _prepare_input_tensor(audio_path: Path, transform: MelSpectrogramTransform) -> torch.Tensor:
-    waveform, sample_rate = torchaudio.load(str(audio_path))
+    try:
+        waveform, sample_rate = torchaudio.load(str(audio_path))
+    except Exception:
+        # Fallback for environments where compressed formats need extra codecs.
+        audio_np, sample_rate = librosa.load(str(audio_path), sr=None, mono=False)
+        if audio_np.ndim == 1:
+            waveform = torch.from_numpy(audio_np).unsqueeze(0)
+        else:
+            waveform = torch.from_numpy(audio_np)
 
     if waveform.shape[0] > 1:
         waveform = waveform.mean(dim=0, keepdim=True)

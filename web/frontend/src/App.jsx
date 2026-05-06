@@ -84,7 +84,7 @@ function HomePage() {
       <section className="header-section">
         <div className="logo-badge">TV</div>
         <p className="eyebrow">Deepfake Audio Detection</p>
-        <h1>TrueVoice Review Demo</h1>
+        <h1>TRUEVOICE</h1>
         <p className="subtext">
           Detect synthetic speech using a ResNet-18 model trained on 56,654 audio samples. Use the flow:
           predict, review output, and track history.

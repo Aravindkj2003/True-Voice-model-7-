@@ -1,0 +1,296 @@
+0003|normal|TRUEVOICE - DEEPFAKE AUDIO DETECTION SYSTEM USING MEL-SPECTROGRAMS AND TRANSFER LEARNING
+0005|normal|A PROJECT REPORT
+0007|normal|submitted by
+0009|normal|Aravind K J
+0010|normal|(TVE24MCA-2015)
+0012|normal|to
+0013|normal|the APJ Abdul Kalam Technological University
+0014|normal|in partial fulfillment of the requirements for the award of the Degree
+0015|normal|of
+0016|normal|MCA
+0020|normal|Department of Computer Application
+0021|normal|College of Engineering Trivandrum
+0022|normal|Thiruvananthapuram
+0023|normal|695016
+0024|normal|March 2026
+0035|normal|DECLARATION
+0038|normal|I undersigned hereby declare that the project report "Deepfake Audio Detection System Using Mel-Spectrograms and Transfer Learning" submitted for partial fulfillment of the requirements for the award of degree of Master of Computer Applications of the APJ Abdul Kalam Technological University, Kerala, is a bonafide work done by me under the supervision of Prof. Deepa S S. This submission represents my ideas in my own words and where ideas or words of others have been included, I have adequately and accurately cited and referenced the original sources. I also declare that I have adhered to ethics of academic honesty and integrity and have not misrepresented or fabricated any data or idea or fact or source in my submission. I understand that any violation of the above will be a cause for disciplinary action by the institute and/or the University and can also evoke penal action from the sources which have thus not been properly cited or from whom proper permission has not been obtained. This report has not been previously formed the basis for the award of any degree, diploma or similar title of any other University.
+0042|normal|Place: Trivandrum      				Name of student: Aravind K J
+0043|normal|Date: March 2026
+0055|normal|College of Engineering Trivandrum
+0056|normal|Thiruvananthapuram
+0057|normal|695016
+0061|normal|CERTIFICATE
+0063|normal|This is to certify that the report entitled "Deepfake Audio Detection System Using Mel-Spectrograms and Transfer Learning" submitted by Aravind K J (Reg No. TVE24MCA-2015) in partial fulfillment of the requirements for the award of the Degree of Master of Computer Applications of the APJ Abdul Kalam Technological University during the year 2026.
+0067|normal|Internal Supervisor                                                                           External Supervisor
+0070|normal|Head of the Dept
+0080|normal|ACKNOWLEDGMENT
+0082|normal|First and foremost I thank GOD almighty and my parents for the success of this project. I owe a sincere gratitude and heart full thanks to everyone who shared their precious time and knowledge for the successful completion of my project.
+0084|normal|I am extremely thankful to Dr. Suresh K, Principal, College of Engineering Trivandrum for providing me with the best facilities and atmosphere which was necessary for the successful completion of this project.
+0086|normal|I am extremely grateful to Dr. Liji P. I, HOD, Dept of Computer Applications, for providing me with the best facilities and atmosphere for creative work, guidance, and encouragement. I express my sincere thanks to Prof. Deepa S S, Department of Computer Applications, College of Engineering Trivandrum for their valuable guidance, support, and advice that aided in the successful completion of my project.
+0088|normal|I profusely thank the other Asst. Professors in the department and all other staff of CET, for their guidance and inspirations throughout my course of study. I owe my thanks to my friends and all others who have directly or indirectly helped me in the successful completion of this project. No words can express my humble gratitude to my beloved parents and relatives who have been guiding me in all walks of my journey.
+0090|normal|Aravind K J
+0094|normal|i
+0100|normal|ABSTRACT
+0102|normal|The rapid advancement of generative artificial intelligence has made synthesizing highly realistic human speech easily accessible, leading to a significant rise in voice cloning and audio-based fraud. This project proposes a comprehensive Deepfake Audio Detection System designed to accurately classify speech clips as either Real (Bona-fide) or Fake (Spoof). The system bridges the gap between digital signal processing and computer vision by transforming one-dimensional audio signals into two-dimensional Mel-spectrograms.
+0103|normal|The core classification engine utilizes a ResNet-18 convolutional neural network architecture, leveraging transfer learning to extract deep hierarchical features from the audio spectrograms. To ensure robust performance, the model employs a two-stage optimization strategy consisting of an initial warmup phase and subsequent fine-tuning. Additionally, SpecAugment and weighted cross-entropy loss are implemented to handle data augmentation and class imbalances.
+0104|normal|Beyond the machine learning pipeline, the project includes a production-ready web application featuring a Flask-based REST API and a responsive React frontend. This allows users to upload audio files and receive real-time authenticity predictions with confidence scores. Evaluated using security-oriented metrics such as Equal Error Rate (EER) and Area Under Curve (AUC), the system demonstrates high validation accuracy, making it a reliable tool for digital forensics and media verification.
+0108|normal|ii
+0117|normal|LIST OF FIGURES
+0118|normal|5.1	System Architecture ………………………………………………………
+0119|normal|5.2	Data Flow Diagram …………………………………………
+0120|normal|5.2.1	 Data Flow Diagram - Level 0……………………….
+0121|normal|5.2.1	 Data Flow Diagram - Level 1……………………….
+0122|normal|5.2.1	 Data Flow Diagram - Level 2……………………….
+0133|normal|vii
+0142|normal|Chapter 1
+0143|normal|INTRODUCTION TO THE PROJECT
+0145|normal|1.1 PROJECT DESCRIPTION
+0147|normal|The rapid evolution of Artificial Intelligence has brought paradigm shifts across various technological domains. However, it has also introduced sophisticated threats, primarily in the form of deepfakes. Deepfake audio, generated by state-of-the-art Text-To-Speech (TTS) and voice-conversion algorithms, is increasingly realistic and difficult to distinguish from genuine human speech. These synthetic voices are actively being weaponized for social engineering, financial fraud, and digital misinformation.
+0149|normal|This project aims to develop an end-to-end AI forensic platform capable of intercepting and evaluating audio clips to determine their authenticity. Instead of analyzing raw audio waveforms, the system translates audio files into Mel-spectrograms. By converting temporal sound into structured time-frequency visual patterns, the system leverages powerful Convolutional Neural Networks (CNNs). Specifically, a pretrained ResNet-18 model is adapted via transfer learning to act as the primary feature extractor and classifier.
+0151|normal|The developed solution is not merely a theoretical model but a fully functional application. It features a robust machine learning backend developed in PyTorch, which is integrated with a Flask REST API. A modern React frontend allows users to seamlessly upload audio files—such as WAV, MP3, or FLAC—and instantly view the model's prediction, confidence levels, and historical analysis.
+0160|normal|1.2 OBJECTIVE
+0162|normal|The primary objectives of this project are:
+0164|normal|Audio-Visual Transformation: To implement a robust preprocessing pipeline that converts raw speech signals into normalized Mel-spectrogram images, retaining crucial frequency variations.
+0166|normal|Binary Classification Model: To develop a deep learning classifier capable of distinguishing between bona-fide (real) and spoofed (fake) audio using transfer learning on a ResNet-18 backbone.
+0168|normal|Model Optimization: To apply advanced training techniques, including two-stage training (warmup and fine-tuning), weighted loss functions, and SpecAugment, to prevent overfitting and ensure high generalizability.
+0170|normal|Security Metric Evaluation: To evaluate the system using forensic-standard metrics, specifically focusing on the Equal Error Rate (EER) alongside traditional accuracy and AUC.
+0172|normal|Real-Time Web Integration: To deploy the trained model through a scalable REST API (Flask) and an interactive web interface (React), enabling real-time inference for end users.
+0175|normal|2
+0182|normal|1.3 BENEFITS
+0184|normal|Proactive Fraud Prevention: Provides a critical layer of security against voice-phishing (vishing) and identity theft by accurately flagging cloned voices.
+0186|normal|Objective Forensic Analysis: Removes human subjectivity from audio verification, providing statistically backed confidence scores.
+0188|normal|Scalable Architecture: The use of transfer learning significantly reduces the computational overhead typically required to train deep learning models from scratch, allowing for faster deployment.
+0190|normal|Real-world Applicability: The inclusion of a web-based dashboard means the tool can be immediately utilized by non-technical users, journalists, or security professionals without requiring coding knowledge.
+0202|normal|3
+0211|normal|Chapter 2
+0212|normal|PROBLEM DEFINITION
+0214|normal|2.1 PROBLEM STATEMENT
+0216|normal|Traditional methods for verifying the authenticity of an audio recording rely heavily on human auditing, which is highly subjective and easily deceived by modern synthetic media. As voice-cloning platforms require only seconds of source audio to generate highly accurate linguistic models, malicious actors can effortlessly impersonate individuals. There is a pressing need for an automated, scalable, and mathematically robust mechanism to detect synthetic speech before it can be used maliciously. The lack of standard tools available for the public and organizations to verify audio legitimacy presents a severe vulnerability in contemporary digital communication.
+0218|normal|2.2 EXISTING SYSTEM
+0220|normal|Current approaches to audio deepfake detection face several critical limitations:
+0222|normal|• Manual Auditing: Relying on the human ear to catch digital artifacts or robotic pacing is ineffective against modern neural vocoders, which perfectly mimic human breathing and intonation.
+0232|normal|• Basic Machine Learning Models: Older automated systems utilize standard Gaussian Mixture Models (GMMs) or Support Vector Machines (SVMs) over raw audio features. These models fail to capture deep, complex hierarchical patterns present in generated audio.
+0234|normal|• Lack of Standardized Metrics: Many existing systems evaluate their models solely based on standard accuracy. In a security context, accuracy is misleading if the dataset is imbalanced. They often ignore the Equal Error Rate (EER), which is the standard for biometric security.
+0236|normal|• Poor Usability: Most detection models remain confined to Jupyter Notebooks or academic repositories, lacking a user-friendly interface that allows ordinary users to test real-world audio files.
+0238|normal|2.3 PROPOSED SYSTEM
+0240|normal|The proposed Deepfake Audio Detection System addresses these gaps by shifting the paradigm from purely acoustic analysis to computer vision. The system includes:
+0242|normal|• Advanced Feature Extraction: Audio is resampled to 16 kHz, converted to mono, and transformed into 128-band Mel-spectrograms. This maps the audio into a 224x224 RGB-like tensor that CNNs excel at processing.
+0244|normal|• ResNet-18 Transfer Learning: By using a model pretrained on millions of images, the network already understands edges, textures, and patterns. We replace the classification head to output binary probabilities (Real vs. Fake).
+0246|normal|5
+0252|normal|• SpecAugment Regularization: To prevent the model from memorizing specific background noises, time and frequency masking are applied dynamically during training.
+0254|normal|• Forensic Metric Focus: The system inherently calculates and attempts to minimize the Equal Error Rate (EER), ensuring a balanced sensitivity between False Alarms and Misses.
+0256|normal|• Production-Ready Deployment: An end-to-end bridge from model to user is established using a Flask backend and React frontend, providing an intuitive drag-and-drop web interface for immediate verification.
+0274|normal|6
+0281|normal|Chapter 3
+0282|normal|LITERATURE REVIEW
+0285|normal|3.1 INTRODUCTION
+0287|normal|The intersection of speech processing and deep learning has seen rapid growth, particularly spurred by global challenges like the ASVspoof (Automatic Speaker Verification Spoofing and Countermeasures) challenges. This chapter reviews the academic landscape surrounding audio spoofing detection and highlights the trajectory from traditional signal processing to modern deep neural networks.
+0289|normal|3.2 REVIEW OF RELATED WORKS
+0291|normal|[1] Wang et al. explored the effectiveness of Mel-Frequency Cepstral Coefficients (MFCCs) paired with Gaussian Mixture Models for identifying voice conversion. While successful against older parametric synthesis, the study noted significant performance drops when faced with modern neural-network-generated speech, highlighting the need for deeper architectural models.
+0293|normal|[2] In recent ASVspoof challenges, researchers like Todisco et al. demonstrated that using Constant Q Cepstral Coefficients (CQCCs) improved detection rates over standard MFCCs. However, these feature-engineering approaches required intense manual tuning and struggled to adapt to cross-dataset variations.
+0303|normal|[3] The shift towards Convolutional Neural Networks (CNNs) was heavily documented by Lavrentyeva et al., who successfully mapped audio spectrograms to image classification tasks using Light-CNN architectures. Their work proved that viewing audio as a 2D image allows the network to learn artifact representations that human engineers might overlook.
+0305|normal|[4] Research by Zhang et al. on ResNet architectures for audio classification indicated that residual connections combat the vanishing gradient problem effectively when parsing highly detailed spectrograms. They demonstrated that transfer learning from visual domains (like ImageNet) yields unexpectedly high feature-extraction capabilities for acoustic spectrograms.
+0307|normal|[5] To combat overfitting in speech recognition, Park et al. introduced SpecAugment, an augmentation method that masks blocks of frequency channels and time steps directly on the spectrogram. Literature confirms that integrating SpecAugment dramatically improves model robustness without requiring vast amounts of new training data.
+0309|normal|This project synthesizes these academic findings by combining the robust 2D mapping of Mel-spectrograms, the proven efficiency of ResNet-18 via transfer learning, and modern augmentation (SpecAugment) to create an optimized, state-of-the-art forensic pipeline.
+0316|normal|8
+0322|normal|Chapter 4
+0323|normal|REQUIREMENT ANALYSIS
+0325|normal|4.1 PURPOSE
+0327|normal|The purpose of this software project is to provide a complete pipeline capable of detecting deepfake audio. It is designed to serve both as a robust training ecosystem for continuous machine learning improvement and as a user-facing application for instant media verification.
+0329|normal|4.2 PRODUCT FUNCTIONS
+0331|normal|• Data Ingestion: Automatically parse structured datasets, generating necessary file manifests for optimal loading.
+0333|normal|• Preprocessing: Dynamically convert WAV, MP3, and FLAC files into normalized Mel-spectrogram tensors.
+0335|normal|• Model Training: Execute a two-stage training loop (frozen backbone warmup followed by total network fine-tuning) with continuous checkpointing.
+0337|normal|• Inference API: Accept client-side audio uploads, process them through the saved model, and return prediction confidences.
+0339|normal|• User Dashboard: Provide an interactive web UI for file uploads, result visualization, and historical record tracking.
+0341|normal|9
+0346|normal|4.3 HARDWARE REQUIREMENTS
+0348|normal|• Processor: Intel Core i5 / AMD Ryzen 5 or higher
+0350|normal|• Memory: Minimum 8 GB RAM (16 GB recommended for batch training)
+0352|normal|• Storage: 256 GB SSD or higher (Dataset footprint ~56,000 samples)
+0354|normal|• GPU (For Training): NVIDIA GPU with CUDA support (e.g., RTX 3060 or Google Colab equivalent)
+0356|normal|• Microphone: Standard inbuilt/external microphone (for future live-recording implementations)
+0358|normal|4.4 SOFTWARE REQUIREMENTS
+0360|normal|• Operating System: Windows / Linux / macOS
+0362|normal|• Programming Languages: Python 3.9+, JavaScript (ES6+)
+0364|normal|• Deep Learning Framework: PyTorch (torch 2.0.1, torchaudio 2.0.2, torchvision 0.15.2)
+0366|normal|• ML Utilities: NumPy, Scikit-learn, Librosa, Pandas, Matplotlib
+0368|normal|• Backend Framework: Flask, Flask-CORS, Gunicorn
+0370|normal|10
+0376|normal|• Frontend Framework: React, Vite, CSS
+0378|normal|• Deployment: Docker (optional), Render (Backend), Vercel (Frontend)
+0380|normal|4.5 FUNCTIONAL REQUIREMENTS
+0382|normal|• Mel-Spectrogram Generation: The system must accurately compute a 128-bin Mel-spectrogram, apply dB scaling, and resize it to 224x224 pixels.
+0384|normal|• Checkpoint Management: The training module must track and save the "best model" based on validation accuracy to prevent losing optimal weights.
+0386|normal|• Security Metrics: The system must compute the Equal Error Rate (EER) alongside standard Confusion Matrix metrics.
+0388|normal|• API Endpoints: The backend must expose a /api/health status route and a /api/predict file-upload route.
+0390|normal|4.6 NON-FUNCTIONAL REQUIREMENTS
+0392|normal|4.6.1 Performance Requirements
+0394|normal|• Inference Speed: The API must process standard-length audio clips and return a prediction in under 3 seconds using CPU fallback, or sub-second using GPU.
+0395|normal|• Accuracy: The model must target a validation accuracy exceeding 95% on structured testing splits to be deemed reliable.
+0397|normal|11
+0403|normal|4.6.2 Quality Requirements
+0405|normal|• Reliability: The REST API must gracefully handle unsupported file types or corrupted audio without crashing the server.
+0407|normal|• Scalability: The Flask server using Gunicorn should support concurrent requests. The React SPA must be responsive across mobile and desktop devices.
+0409|normal|• Maintainability: The core ML logic must be modularized (separated into config.py, data_loader.py, model.py, etc.) for clean code maintenance.
+0428|normal|12
+0436|normal|Chapter 5
+0437|normal|DESIGN AND IMPLEMENTATION
+0440|normal|5.1 SYSTEM ARCHITECTURE
+0443|normal|Figure 5.1 : System Architecture
+0455|normal|5.2 DATA FLOW DIAGRAM
+0457|normal|5.2.1 Data Flow Diagram - level 0
+0459|normal|Fig 5.2.1 : DFD  level 0
+0460|normal|5.2.2 Data Flow Diagram - level 1
+0462|normal|Fig 5.2.2 : DFD  level 1
+0464|normal|14
+0470|normal|5.2.3 Data Flow Diagram - level 2
+0475|normal|Fig 5.2.3 : DFD  level 2
+0478|normal|15
+0485|normal|5.3 SCREENSHOT OF USER INTERFACE
+0487|normal|5.3.1 Home Page
+0491|normal|Fig 5.3.1 : Home Page
+0497|normal|16
+0506|normal|5.3.2 Prediction Page
+0511|normal|Fig 5.3.2 : Prediction Page
+0517|normal|17
+0525|normal|5.3.3 Result Page
+0530|normal|Fig 5.3.3 : Result Page
+0535|normal|18
+0544|normal|5.3.4 Prediction History Page
+0550|normal|Fig 5.3.4 : Prediction History Page
+0554|normal|19
+0561|normal|5.4 FUNCTIONAL COMPONENTS
+0563|normal|5.4.1 Data Preparation Module
+0565|normal|Handles the parsing of the 56,654 audio samples. It splits data into training (80%), validation (10%), and testing (10%) sets, generating a manifest.json file for accelerated disk-reading during training.
+0567|normal|5.4.2 Feature Extraction & Augmentation Module
+0568|normal|Utilizes Librosa and Torchaudio to generate standardized Mel-spectrograms. It integrates SpecAugment to randomly mask frequency channels and time steps, forcing the model to rely on broader acoustic patterns rather than isolated artifacts.
+0570|normal|5.4.3 Core Neural Network Module
+0571|normal|Instantiates the ResNet-18 architecture. The top layer (designed for 1000 ImageNet classes) is discarded. A custom classification head is appended, utilizing Dropout layers for regularization and mapping to two final outputs (Bona-fide vs. Spoof).
+0573|normal|5.4.4 The Two-Stage Trainer
+0574|normal|Stage 1 (Warmup): Freezes the deep convolutional layers. Only the newly appended classification head is trained for 5 epochs with a higher learning rate (1e-4). This prevents massive gradient updates from destroying the pretrained visual logic.
+0575|normal|Stage 2 (Fine-tuning): Unfreezes the entire network. Training continues for up to 50 epochs at a minimal learning rate (2e-5), allowing the network to make micro-adjustments specific to audio textures.
+0577|normal|20
+0582|normal|5.5 TECHNOLOGY STACK
+0584|normal|• Deep Learning: PyTorch (Provides highly optimized tensor computations and GPU acceleration)
+0585|normal|.
+0586|normal|• Audio Processing: Torchaudio (Seamless integration with PyTorch tensors) and Librosa.
+0588|normal|• Web Backend: Flask (Lightweight, ideal for microservices and ML inference wrapping).
+0590|normal|• Web Frontend: React JS managed by Vite for fast, state-driven UI rendering.
+0592|Heading 3|5.6 DATASET DESCRIPTION
+0594|normal|The reliability of any deepfake detection system depends entirely on the data it was trained on. To ensure this model could handle real-world challenges—like different accents, emotions, and background noises—I compiled a multi-source dataset rather than relying on a single collection. By combining these diverse sources, the system learns to identify the digital "fingerprints" of AI-generated audio rather than just memorizing a specific voice.
+0595|normal|Standard Forensic Dataset: This served as the foundational layer of the project. It provided a clean, balanced mix of genuine human speech and typical spoofed audio, allowing the model to establish a baseline for what a standard synthetic artifact looks like.
+0597|normal|21
+0601|normal|ElevenLabs (High-Fidelity Synthetic) Dataset: Modern voice cloning is incredibly sophisticated. I included high-quality samples from ElevenLabs to push the model to its limits. These represent the "gold standard" of AI speech, and training on them was essential to ensure the system doesn't fail when faced with high-end, realistic clones.
+0603|normal|Release into the Wild Dataset: In the real world, audio isn't recorded in a silent studio. This dataset was included to expose the model to "dirty" audio—files with social media compression, background chatter, and varying microphone qualities.
+0605|normal|RAVDESS (Emotional Speech) Dataset: One common failure of detection systems is misidentifying human emotion (like crying or shouting) as an AI glitch. By integrating the Ryerson Audio-Visual database, I taught the model to recognize high-intensity human intonations as bona-fide speech.
+0607|normal|LibreVoc & Hi-Fi Multi-Speaker Datasets: These were used to provide a wide variety of speaker identities. The goal was to make the model "speaker-independent," meaning it focuses on how the audio was produced rather than whose voice it is hearing.
+0609|normal|MLAAD (Multilingual) Dataset: To avoid a bias toward English, I included multilingual samples. This ensures the classifier remains focused on the underlying acoustic patterns and digital inconsistencies that exist across all languages when audio is artificially synthesized.
+0610|normal|22
+0614|normal|5.7 MATHEMATICAL FORMULATION
+0616|normal|5.7.1 Weighted Cross-Entropy Loss
+0618|normal|To handle minute class imbalances and penalize specific misclassifications aggressively, the system implements a Weighted Cross-Entropy loss function:
+0619|normal|L = - Σ [ w_y * log(p_y) ]
+0620|normal|where 'w_y' represents the calculated weight for the true class, and 'p_y' is the predicted probability.
+0622|normal|5.7.2 Equal Error Rate (EER)
+0624|normal|Unlike standard accuracy, EER identifies the strict operating threshold where the False Alarm Rate (FAR) matches the False Negative Rate (FNR). The system evaluates EER mathematically as:
+0625|normal|EER = min | FAR(τ) - FNR(τ) |
+0626|normal|By locating this intersection on the ROC curve, we ensure the system is tuned for forensic security standards rather than generic classification.
+0637|normal|23
+0643|normal|Chapter 6
+0644|normal|CODING
+0646|normal|6.1 DATA LOADER AND PREPROCESSING (src/data_loader.py)
+0648|normal|1. Initialize the dataset class utilizing the PyTorch Dataset primitive to manage data access and indexing.
+0649|normal|2. Read audio paths and corresponding labels via a JSON manifest or automated directory traversal.
+0651|normal|3. Load the raw audio signal into memory using the torchaudio.load() function.
+0653|normal|4. Resample the waveform strictly to 16,000 Hz to maintain uniform frequency bins across all samples.
+0655|normal|5. Process the audio channels to produce a mono signal by averaging the channels if the input is stereo.
+0657|normal|6. Apply the MelSpectrogram transform to convert the time-domain signal into a frequency-domain representation:
+0659|normal|n_mels: 128
+0660|normal|n_fft: 2048
+0661|normal|hop_length: 512
+0666|normal|7. Convert the amplitude values to a decibel (dB) scale to implement logarithmic perception scaling.
+0668|normal|8.  Normalize the resulting tensor values to a standard range of  [0, 1].
+0670|normal|9. Resize the spectrogram tensor to  (224, 224)  to meet the input layer requirements of the ResNet architecture.
+0672|normal|10. Finalize the input tensor for the model:
+0674|normal|Channel Expansion: Duplicate the single channel into three channels to simulate RGB format.
+0675|normal|ImageNet Normalization: Apply standard metrics with a mean of 0.485 and a standard deviation of 0.229.
+0677|normal|6.2 MODEL ARCHITECTURE (src/model.py)
+0679|normal|1.  Import models.resnet18(pretrained=True) from torchvision.
+0681|normal|2.  Extract the number of input features from the original fully connected (FC) layer.
+0683|normal|3.  Replace the FC layer with a custom sequential block:
+0685|normal|• Dropout(p=0.5)
+0686|normal|• Linear(num_features, 512)
+0687|normal|• ReLU Activation
+0688|normal|• Dropout(p=0.5)
+0689|normal|• Linear(512, 2)
+0691|normal|25
+0696|normal|4. Implement helper methods to dynamically freeze and unfreeze network parameters based on the current training stage.
+0699|normal|6.3 TRAINING PIPELINE (src/trainer.py)
+0701|normal|1.  Define the AdamW optimizer to handle weight decay efficiently.
+0703|normal|2. Initialize the learning rate scheduler based on the current epoch (Warmup vs Fine-tuning).
+0705|normal|3.  Loop through batches, moving tensors to the CUDA device.
+0707|normal|4.  Apply the forward pass and compute the Weighted Cross-Entropy loss.
+0709|normal|5.  Perform backpropagation and optimizer stepping.
+0711|normal|6. Run the validation loop, calculating real-time accuracy and updating a running JSON summary.
+0713|normal|7. Save the model state dict if the current epoch's validation accuracy exceeds the historical best.
+0719|normal|26
+0724|normal|6.4 API INFERENCE (web/backend/app.py)
+0726|normal|1. Initialize a Flask application instance with CORS (Cross-Origin Resource Sharing) enabled to allow secure communication with the React frontend.
+0728|normal|2.  Boot the system by automatically locating and loading the pre-trained weights from best_model.pt into the ResNet-18 architecture.
+0730|normal|3.  Expose a dedicated POST route at /api/predict designed to accept and process multipart form-data containing the user’s audio file.
+0732|normal|4.  Secure the incoming data by saving the uploaded file to a temporary server-side directory for immediate processing.
+0734|normal|5.  Analyze the audio by passing the file path to the AudioAnalyzer utility class, which executes the exact Torchaudio preprocessing pipeline (Resampling, Mel-Spectrogram, and Normalization) used during the training phase.
+0736|normal|6.  Perform model inference within a torch.no_grad() context to disable gradient calculation, significantly reducing memory consumption and increasing prediction speed.
+0738|normal|7.  Calculate the final probability by applying a Softmax function to the raw model logits to derive precise confidence percentages for "Real" and "Fake" classes.
+0740|normal|8.  Return the results to the client as a formatted JSON payload and immediately trigger a cleanup routine to delete the temporary audio file from the server storage.
+0742|normal|27
+0750|normal|Chapter 7
+0751|normal|TESTING AND IMPLEMENTATION
+0754|normal|7.1 TESTING STRATEGY
+0756|normal|Testing evaluates the system’s functionality, adherence to theoretical architectures, and resilience in real-world scenarios. In a machine learning context, testing involves both software engineering validations (Unit testing the API) and statistical validations (Model evaluation).
+0759|normal|7.2 UNIT TESTING
+0761|normal|Unit testing involves verifying individual components or units of the software to ensure they function as intended. Each unit is tested independently to validate its correctness before integration with other components. The test cases and results for unit testing are presented in Table 7.2.
+0777|normal|Fig 7.2 : Unit Testing
+0780|normal|29
+0786|normal|7.3 INTEGRATION TESTING
+0788|normal|Integration testing verifies that different modules or services work well together. The test cases and results are presented in Table 7.3.
+0789|normal|Fig 7.3 : Integration Testing
+0791|normal|30
+0796|normal|7.4 SYSTEM AND PERFORMANCE TESTING
+0798|normal|System testing evaluates the complete and integrated software system to verify that it meets specified requirements. The test cases and results are presented in Table 7.3.
+0801|normal|Fig 7.4 :System test cases and results
+0803|normal|31
+0810|normal|Chapter 8
+0811|normal|RESULTS AND DISCUSSIONS
+0813|normal|The Deepfake Audio Detection pipeline was successfully trained, validated, and deployed as a web application. The structured use of transfer learning heavily accelerated convergence, yielding impressive results on the dataset.
+0815|normal|Key Findings:
+0817|normal|• Optimization and Convergence: Tracking the JSON training summaries revealed that the model learned rapidly. During the 50-epoch cycle, training accuracy approached nearly 1.0, while validation accuracy stabilized tightly in the high 96% to 97% range.
+0819|normal|• High Classification Accuracy: The documented best model achieved a peak validation accuracy of 97.33%. This indicates that the ResNet-18 architecture is highly capable of isolating synthetic artifacts in the Mel-spectrogram visual space.
+0821|normal|• Forensic Metric Viability: The Equal Error Rate (EER) evaluation confirmed that the model maintains a healthy equilibrium between False Positives (flagging real audio as fake) and False Negatives (missing a deepfake). This is vital for real-world forensic deployment where false alarms can ruin credibility.
+0831|normal|• Operational Deployment: The integration of the Python machine learning ecosystem with web technologies (Flask/React) proved entirely feasible. The web application dynamically visualizes "Fake" or "Real" outcomes alongside a confidence spectrum (e.g., 98% Fake, 2% Real), providing highly interpretable results for the end-user.
+0834|normal|In summation, combining visual-domain convolutional models with audio frequency representations provides a remarkably strong framework for AI forensics. The use of a two-stage training logic prevented catastrophic forgetting of the ResNet weights, resulting in a highly stable classifier.
+0854|normal|33
+0859|normal|Chapter 9
+0860|normal|CONCLUSION
+0862|normal|The Deepfake Audio Detection System successfully fulfills its objective of automatically and accurately distinguishing between bona-fide human speech and synthetic audio. By migrating the classification problem from a complex acoustic domain to a standardized visual domain using Mel-spectrograms, the project capitalizes on the vast power of transfer learning. The implementation seamlessly combines rigorous data engineering, weighted deep-learning optimization, and security-centric metrics (EER) into a comprehensive pipeline. Furthermore, wrapping the model in an accessible web application proves that cutting-edge AI verification tools can be made practical and deployable for daily use.
+0864|normal|9.1 LIMITATIONS
+0866|normal|• Unseen Vocoder Vulnerability: Deepfake generation tools evolve incredibly fast. A model trained on today's TTS architectures may experience a drop in accuracy when exposed to entirely new neural vocoder generation techniques.
+0868|normal|• Fixed Input Context: The reliance on strict tensor resizing (224x224) means that excessively long audio clips must either be truncated or compressed, potentially losing subtle temporal artifacts scattered throughout a longer conversation.
+0870|normal|• Environmental Noise: While SpecAugment provides resilience, heavily distorted audio with extreme background noise or severe phone-line compression may still force misclassifications.
+0878|normal|9.2 FUTURE SCOPE
+0880|normal|• Architecture Evolution: Upgrading the backbone from CNNs to Audio Spectrogram Transformers (ASTs) could allow the model to learn global context across the entire audio clip rather than local visual textures.
+0882|normal|• Explainable AI (XAI): Implementing techniques like Grad-CAM (Gradient-weighted Class Activation Mapping) to highlight exactly which frequency bands in the spectrogram triggered the "Fake" classification, providing interpretable visual evidence for forensic audits.
+0884|normal|• Multi-lingual Benchmarking: Expanding the dataset explicitly across diverse languages and extreme accents to ensure the model focuses purely on synthetic artifacts rather than linguistic patterns.
+0886|normal|• Edge Deployment: Quantizing the model weights to deploy the inference engine directly onto mobile devices (via CoreML or ONNX) to enable offline, real-time voice verification during live phone calls.
+0896|normal|35
+0901|normal|BIBLIOGRAPHY
+0903|normal|[1] Todisco, M., Delgado, H., & Evans, N. (2017). "Constant Q cepstral coefficients: A spoofing countermeasure for automatic speaker verification." Computer Speech & Language.
+0905|normal|[2] Lavrentyeva, G., Novoselov, S., Malykh, E., Kozlov, A., Oleg, K., & Shchemelinin, V. (2017). "Audio replay attack detection with deep learning frameworks." INTERSPEECH.
+0907|normal|[3] He, K., Zhang, X., Ren, S., & Sun, J. (2016). "Deep Residual Learning for Image Recognition." IEEE Conference on Computer Vision and Pattern Recognition (CVPR).
+0909|normal|[4] Park, D. S., Chan, W., Zhang, Y., Chiu, C. C., Zoph, B., Cubuk, E. D., & Le, Q. V. (2019). "SpecAugment: A Simple Data Augmentation Method for Automatic Speech Recognition." INTERSPEECH.
+0911|normal|[5] Yamagishi, J., Todisco, M., Sahidullah, M., Delgado, H., Wang, X., Evans, N., ... & Kinnunen, T. (2019). "ASVspoof 2019: The 3rd Automatic Speaker Verification Spoofing and Countermeasures Challenge database." INTERSPEECH.
+0913|normal|[6] Paszke, A., Gross, S., Massa, F., Lerer, A., Bradbury, J., Chanan, G., ... & Chintala, S. (2019). "PyTorch: An Imperative Style, High-Performance Deep Learning Library." Advances in Neural Information Processing Systems.
+0915|normal|[7] McFee, B., Raffel, C., Liang, D., Ellis, D. P., McVicar, M., Battenberg, E., & Nieto, O. (2015). "librosa: Audio and music signal analysis in python." Proceedings of the 14th Python in Science Conference.
+0918|normal|36
